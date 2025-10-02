@@ -8,6 +8,6 @@ namespace Data
 {
     public static class Constant
     {
-        public string _connectionString = 
+        public static string _connectionString = "Server=localhost,1433;Database=REDACTED_DB_NAME;User Id=sa;Password=REDACTED_PASSWORD;";
     }
 }
