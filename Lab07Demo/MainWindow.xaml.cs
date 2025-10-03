@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,17 +10,206 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Business;
+using Entity;
 
 namespace Lab07Demo
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        // PRODUCTOS
+
+        private void Read_Click(object sender, RoutedEventArgs e)
+        {
+            var business = new BProduct();
+            var products = business.Read();
+            ItemsDataGrid.ItemsSource = products;
+        }
+
+        private void Create_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                MessageBox.Show("Name es requerido."); return;
+            }
+            if (!decimal.TryParse(txtPrice.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out var price))
+            {
+                MessageBox.Show("Price inválido."); return;
+            }
+            if (!int.TryParse(txtStock.Text, out var stock))
+            {
+                MessageBox.Show("Stock inválido."); return;
+            }
+
+            var product = new Product
+            {
+                Name = txtName.Text.Trim(),
+                Price = price,
+                Stock = stock
+            };
+
+            try
+            {
+                var business = new BProduct();
+                business.Create(product);
+                MessageBox.Show("Product Created.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
+            if (ItemsDataGrid.SelectedItem is Product selected)
+            {
+                selected.Name = txtName.Text.Trim();
+                if (!decimal.TryParse(txtPrice.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out var price))
+                {
+                    MessageBox.Show("Price inválido."); return;
+                }
+                if (!int.TryParse(txtStock.Text, out var stock))
+                {
+                    MessageBox.Show("Stock inválido."); return;
+                }
+                selected.Price = price;
+                selected.Stock = stock;
+
+                try
+                {
+                    var business = new BProduct();
+                    business.Update(selected);
+                    MessageBox.Show("Producto actualizado.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (ItemsDataGrid.SelectedItem is Product selected)
+            {
+                try
+                {
+                    var business = new BProduct();
+                    business.Delete(selected);
+                    MessageBox.Show("Producto eliminado.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void ItemsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ItemsDataGrid.SelectedItem is Product selected)
+            {
+                txtName.Text = selected.Name;
+                txtPrice.Text = selected.Price.ToString(CultureInfo.InvariantCulture);
+                txtStock.Text = selected.Stock.ToString();
+            }
+        }
+
+        // CLIENTES
+
+        private void ReadCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            var business = new BCostumer();
+            var customers = business.Read();
+            CustomersDataGrid.ItemsSource = customers;
+        }
+
+        private void CreateCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtCustomerName.Text))
+            {
+                MessageBox.Show("Name es requerido."); return;
+            }
+            if (string.IsNullOrWhiteSpace(txtCustomerAddress.Text))
+            {
+                MessageBox.Show("Address es requerido."); return;
+            }
+            if (string.IsNullOrWhiteSpace(txtCustomerPhone.Text))
+            {
+                MessageBox.Show("Phone es requerido."); return;
+            }
+
+            var customer = new Costumer
+            {
+                Name = txtCustomerName.Text.Trim(),
+                Address = txtCustomerAddress.Text.Trim(),
+                Phone = txtCustomerPhone.Text.Trim()
+            };
+
+            try
+            {
+                var business = new BCostumer();
+                business.Create(customer);
+                MessageBox.Show("Customer Created.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private void UpdateCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (CustomersDataGrid.SelectedItem is Costumer selected)
+            {
+                selected.Name = txtCustomerName.Text.Trim();
+                selected.Address = txtCustomerAddress.Text.Trim();
+                selected.Phone = txtCustomerPhone.Text.Trim();
+
+                try
+                {
+                    var business = new BCostumer();
+                    business.Update(selected);
+                    MessageBox.Show("Cliente actualizado.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void DeleteCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            if (CustomersDataGrid.SelectedItem is Costumer selected)
+            {
+                try
+                {
+                    var business = new BCostumer();
+                    business.Delete(selected);
+                    MessageBox.Show("Cliente eliminado.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void CustomersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CustomersDataGrid.SelectedItem is Costumer selected)
+            {
+                txtCustomerName.Text = selected.Name;
+                txtCustomerAddress.Text = selected.Address;
+                txtCustomerPhone.Text = selected.Phone;
+            }
         }
     }
 }

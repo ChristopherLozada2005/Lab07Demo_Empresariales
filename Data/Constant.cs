@@ -8,6 +8,9 @@ namespace Data
 {
     public static class Constant
     {
-        public static string _connectionString = "Server=localhost,1433;Database=REDACTED_DB_NAME;User Id=sa;Password=REDACTED_PASSWORD;";
+        public static string _connectionString =
+    "Server=LAB1502-005\\SQLEXPRESS;Database=InvoicesDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
     }
+
 }

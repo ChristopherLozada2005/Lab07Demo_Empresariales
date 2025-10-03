@@ -5,8 +5,109 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab07Demo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="900">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <!-- Formulario de productos -->
+        <Border Margin="10" Padding="10" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Name:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtName" Grid.Column="1" Width="200" />
+
+                <TextBlock Grid.Column="3" Text="Price:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtPrice" Grid.Column="4" Width="100" />
+
+                <TextBlock Grid.Row="1" Text="Stock:" VerticalAlignment="Center" Margin="0,10,6,0"/>
+                <TextBox x:Name="txtStock" Grid.Row="1" Grid.Column="1" Width="120" Margin="0,10,0,0"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3"
+                            Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Name="Read"    Content="GetAll"  Click="Read_Click"    Margin="0,0,8,0" Width="90"/>
+                    <Button Name="Create"  Content="Create"  Click="Create_Click"  Margin="0,0,8,0" Width="90"/>
+                    <Button Name="Update"  Content="Update"  Click="Update_Click"  Margin="0,0,8,0" Width="90"/>
+                    <Button Name="Delete"  Content="Delete"  Click="Delete_Click"  Width="90"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Grilla de productos -->
+        <DataGrid x:Name="ItemsDataGrid" Grid.Row="1" Margin="10"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  SelectionChanged="ItemsDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ProductID" Binding="{Binding ProductID}" />
+                <DataGridTextColumn Header="Name"      Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Price"     Binding="{Binding Price}" />
+                <DataGridTextColumn Header="Stock"     Binding="{Binding Stock}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Formulario de clientes -->
+        <Border Margin="10" Padding="10" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Name:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtCustomerName" Grid.Column="1" Width="200" />
+
+                <TextBlock Grid.Column="3" Text="Address:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBox x:Name="txtCustomerAddress" Grid.Column="4" Width="100" />
+
+                <TextBlock Grid.Row="1" Text="Phone:" VerticalAlignment="Center" Margin="0,10,6,0"/>
+                <TextBox x:Name="txtCustomerPhone" Grid.Row="1" Grid.Column="1" Width="120" Margin="0,10,0,0"/>
+
+                <StackPanel Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3"
+                            Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                    <Button Name="ReadCustomer"    Content="GetAll"  Click="ReadCustomer_Click"    Margin="0,0,8,0" Width="90"/>
+                    <Button Name="CreateCustomer"  Content="Create"  Click="CreateCustomer_Click"  Margin="0,0,8,0" Width="90"/>
+                    <Button Name="UpdateCustomer"  Content="Update"  Click="UpdateCustomer_Click"  Margin="0,0,8,0" Width="90"/>
+                    <Button Name="DeleteCustomer"  Content="Delete"  Click="DeleteCustomer_Click"  Width="90"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Grilla de clientes -->
+        <DataGrid x:Name="CustomersDataGrid" Grid.Row="3" Margin="10"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  SelectionChanged="CustomersDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CustomerID" Binding="{Binding CustomerID}" />
+                <DataGridTextColumn Header="Name"       Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Address"    Binding="{Binding Address}" />
+                <DataGridTextColumn Header="Phone"      Binding="{Binding Phone}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
