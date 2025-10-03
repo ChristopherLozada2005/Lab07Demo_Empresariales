@@ -1,15 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.Globalization;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Business;
 using Entity;
 
@@ -209,6 +201,110 @@ namespace Lab07Demo
                 txtCustomerName.Text = selected.Name;
                 txtCustomerAddress.Text = selected.Address;
                 txtCustomerPhone.Text = selected.Phone;
+            }
+        }
+
+        // FACTURAS
+
+        private void ReadInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            var business = new BInvoice();
+            var invoices = business.Read();
+            InvoicesDataGrid.ItemsSource = invoices;
+        }
+
+        private void CreateInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            if (!int.TryParse(txtInvoiceCustomerID.Text, out var customerId))
+            {
+                MessageBox.Show("CustomerID inválido."); return;
+            }
+            if (!dpInvoiceDate.SelectedDate.HasValue)
+            {
+                MessageBox.Show("Date es requerido."); return;
+            }
+            if (!decimal.TryParse(txtInvoiceTotal.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out var total))
+            {
+                MessageBox.Show("Total inválido."); return;
+            }
+
+            var invoice = new Invoice
+            {
+                CustomerID = customerId,
+                Date = dpInvoiceDate.SelectedDate.Value,
+                Total = total
+            };
+
+            try
+            {
+                var business = new BInvoice();
+                business.Create(invoice);
+                MessageBox.Show("Factura creada.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private void UpdateInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            if (InvoicesDataGrid.SelectedItem is Invoice selected)
+            {
+                if (!int.TryParse(txtInvoiceCustomerID.Text, out var customerId))
+                {
+                    MessageBox.Show("CustomerID inválido."); return;
+                }
+                if (!dpInvoiceDate.SelectedDate.HasValue)
+                {
+                    MessageBox.Show("Date es requerido."); return;
+                }
+                if (!decimal.TryParse(txtInvoiceTotal.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out var total))
+                {
+                    MessageBox.Show("Total inválido."); return;
+                }
+
+                selected.CustomerID = customerId;
+                selected.Date = dpInvoiceDate.SelectedDate.Value;
+                selected.Total = total;
+
+                try
+                {
+                    var business = new BInvoice();
+                    business.Update(selected);
+                    MessageBox.Show("Factura actualizada.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void DeleteInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            if (InvoicesDataGrid.SelectedItem is Invoice selected)
+            {
+                try
+                {
+                    var business = new BInvoice();
+                    business.Delete(selected);
+                    MessageBox.Show("Factura eliminada.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+        private void InvoicesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (InvoicesDataGrid.SelectedItem is Invoice selected)
+            {
+                txtInvoiceCustomerID.Text = selected.CustomerID.ToString();
+                dpInvoiceDate.SelectedDate = selected.Date;
+                txtInvoiceTotal.Text = selected.Total.ToString(CultureInfo.InvariantCulture);
             }
         }
     }
